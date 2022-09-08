@@ -1,5 +1,3 @@
-
-
 # INIT MODEL and COMPILE
 from tensorflow.keras import layers, models
 from tensorflow.keras.layers.experimental.preprocessing import Rescaling
@@ -30,4 +28,5 @@ def init_model():
     model.compile(loss='binary_crossentropy',
                   optimizer='adam',
                   metrics=['accuracy'])
+
     return model
