@@ -29,4 +29,6 @@ def init_model():
                   optimizer='adam',
                   metrics=['accuracy'])
 
+    print("✅Model has been initialized")
+
     return model
