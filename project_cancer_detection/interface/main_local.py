@@ -27,8 +27,11 @@ if __name__ == '__main__':
     # Link to your sample train_path (manually selected for now)
     local_train_path = os.environ['LOCAL_TRAIN_PATH']
     local_test_path = os.environ['LOCAL_TEST_PATH']
+    cloud_train_path = os.environ['CLOUD_TRAIN_PATH']
+    cloud_test_path = os.environ['CLOUD_TEST_PATH']
+
     print("1")
-    train_generator, val_generator, test_generator = preprocessed(local_train_path, local_test_path)
+    train_generator, val_generator, test_generator = preprocessed(cloud_train_path, cloud_test_path)
     history, model = get_history(train_generator, val_generator)
     evaluate_model(model, test_generator)
     #evaluate_model_04()
