@@ -6,7 +6,7 @@ from ml_logic.preprocessor import preprocessed
 
 def get_history(train_generator, val_generator):
     model = init_model()
-    epochs = 1
+    epochs = 15
     batch_size = 32
     es = EarlyStopping(patience=3, restore_best_weights=True,verbose=1)
     history = model.fit(train_generator,
