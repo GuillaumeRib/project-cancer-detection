@@ -6,14 +6,14 @@ from ml_logic.preprocessor import preprocessed
 
 def get_history(train_generator, val_generator):
     model = init_model()
-    epochs = 15
+    epochs = 1
     batch_size = 32
     es = EarlyStopping(patience=3, restore_best_weights=True,verbose=1)
     history = model.fit(train_generator,
                         epochs = epochs,
                         validation_data=val_generator,
                         batch_size = batch_size,
-                        verbose = 0,
+                        verbose = 1,
                         callbacks = [es])
     return history, model
 
