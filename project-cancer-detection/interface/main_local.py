@@ -13,7 +13,7 @@ def get_history(train_generator, val_generator):
                         epochs = epochs,
                         validation_data=val_generator,
                         batch_size = batch_size,
-                        verbose = 0,
+                        verbose = 1,
                         callbacks = [es])
     return history, model
 

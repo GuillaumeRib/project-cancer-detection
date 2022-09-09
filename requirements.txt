@@ -8,7 +8,7 @@ wheel>=0.29
 numpy
 pandas
 scikit-learn
-# tensorflow : complete the version based on your machine setup
+Tensorflow<=2.9.2
 
 # tests/linter
 black
