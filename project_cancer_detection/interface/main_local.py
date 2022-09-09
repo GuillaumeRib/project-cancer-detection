@@ -1,8 +1,7 @@
 from tensorflow.keras.callbacks import EarlyStopping
-from ml_logic.initialize_model import init_model
-from ml_logic.preprocessor import preprocessed
-#print(local_train_path)
-
+from project_cancer_detection.ml_logic.initialize_model import init_model
+from project_cancer_detection.ml_logic.preprocessor import preprocessed
+import os
 
 def get_history(train_generator, val_generator):
     model = init_model()
@@ -26,8 +25,8 @@ def evaluate_model_04():
 
 if __name__ == '__main__':
     # Link to your sample train_path (manually selected for now)
-    local_train_path = '../raw_data/train_small'
-    local_test_path = '../raw_data/test_small'
+    local_train_path = os.environ['LOCAL_TRAIN_PATH']
+    local_test_path = os.environ['LOCAL_TEST_PATH']
     print("1")
     train_generator, val_generator, test_generator = preprocessed(local_train_path, local_test_path)
     history, model = get_history(train_generator, val_generator)
