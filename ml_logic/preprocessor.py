@@ -1,7 +1,6 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
 def preprocessed(local_train_path, local_test_path):
@@ -28,5 +27,8 @@ def preprocessed(local_train_path, local_test_path):
                                                     target_size=(96,96),
                                                     class_mode='binary')
 
+    print("⭐️Train data was generated")
+    print("⭐️Validation data was generated")
+    print("⭐️Test data was generated")
 
     return train_generator, val_generator, test_generator
