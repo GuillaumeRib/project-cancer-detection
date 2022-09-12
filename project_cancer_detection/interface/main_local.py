@@ -1,12 +1,23 @@
 from webbrowser import get
 from tensorflow.keras.callbacks import EarlyStopping
-from project_cancer_detection.ml_logic.initialize_model import init_model
-from project_cancer_detection.ml_logic.initialize_model import init_model_2
+from project_cancer_detection.ml_logic.initialize_model import init_model, init_model_2, init_VGG
 from project_cancer_detection.ml_logic.preprocessor import preprocessed
 import os
 import mlflow
 
-# Model Parameters (from get_history function)
+####################################
+# Select the model
+#model_name='Baseline_CNN'
+#model_name='V2_CNN'
+model_name='VGG16_transfer'
+
+# Sample size
+sample_size = '_5K'
+
+# Init model params
+l_rate = 0.001
+
+# Fit Model Parameters (from get_history function)
 epochs = 1
 batch_size = 32
 verbose_model = 1
@@ -14,13 +25,15 @@ verbose_model = 1
 # EarlyStopping
 patience=3
 verbose=1
+####################################
+
 
 def get_paths():
     DATA_SOURCE = os.environ.get("DATA_SOURCE")
 
     if DATA_SOURCE == 'local':
-        train_path = os.environ.get('LOCAL_TRAIN_PATH')
-        test_path = os.environ.get('LOCAL_TEST_PATH')
+        train_path = os.environ.get('LOCAL_TRAIN_PATH')+sample_size
+        test_path = os.environ.get('LOCAL_TEST_PATH')+sample_size
 
     if DATA_SOURCE == 'cloud':
         train_path = os.environ.get('CLOUD_TRAIN_PATH')
@@ -32,12 +45,16 @@ def get_paths():
 
 def get_history(train_generator, val_generator):
 
-    model = init_model()
-    es = EarlyStopping(patience=patience, restore_best_weights=True,verbose=verbose)
-    #model = init_model_2()
+    if model_name == 'Baseline_CNN':
+        model = init_model(l_rate)
+    elif model_name == 'V2_CNN':
+        model = init_model_2(l_rate)
+    elif model_name == 'VGG16_transfer':
+        model = init_VGG(l_rate)
 
-    epochs = 10
-    batch_size = 128
+    es = EarlyStopping(patience=patience, restore_best_weights=True,verbose=verbose)
+
+
     history = model.fit(train_generator,
                         epochs = epochs,
                         validation_data=val_generator,
@@ -46,22 +63,18 @@ def get_history(train_generator, val_generator):
                         callbacks = [es])
     return history, model
 
-def evaluate_model(model, test_generator):
-    results = model.evaluate(test_generator, verbose = 1 )
-    return print(f"The accuracy on the test set is of {results[1]*100:.2f} %")
 
 def evaluate(model, test_generator):
     results = model.evaluate(test_generator, verbose = 1 )
     return results
 
-
-def save_model(model, model_outputs, batch_size, epochs):
+def save_model(model, model_outputs, batch_size, epochs, model_name, l_rate, sample_size):
     mlflow.set_tracking_uri("https://mlflow.lewagon.ai")
     mlflow.set_experiment(experiment_name="project-cancer-detection")
 
     with mlflow.start_run():
 
-        params = dict(batch_size=batch_size, epochs=epochs)
+        params = dict(batch_size=batch_size, epochs=epochs, l_rate=l_rate, model_name=model_name, sample_size=sample_size)
         metrics = dict(loss=model_outputs[0], accuracy=model_outputs[1])
 
         mlflow.log_params(params)
@@ -81,24 +94,24 @@ def load_model():
 
 
 if __name__ == '__main__':
-    # Link to your sample train_path (manually selected for now)
-    '''
-    local_train_path = os.environ['LOCAL_TRAIN_PATH']
-    local_test_path = os.environ['LOCAL_TEST_PATH']
-    cloud_train_path = os.environ['CLOUD_TRAIN_PATH']
-    cloud_test_path = os.environ['CLOUD_TEST_PATH']
-    '''
-
+    # Store your train & test paths from .env file
     train_path, test_path = get_paths()
 
     print('### Preprocessing & generators starting ... ###')
-    train_generator, val_generator, test_generator = preprocessed(train_path, test_path)
-    print('### Preprocessing & generators done! ###\n')
+    if model_name == 'VGG16_transfer':
+        train_generator, val_generator, test_generator = preprocessed(train_path, test_path)
+        print('### Preprocessing & generators done! ###\n')
+    else:
+        train_generator, val_generator, test_generator = preprocessed(train_path, test_path)
+        print('### Preprocessing & generators done! ###\n')
 
     print('### Model fit starting ... ###')
     history, model = get_history(train_generator, val_generator)
     print('### Model fit done ! Starting evaluation ... ###\n')
 
-    evaluate_model(model, test_generator)
+    print('### Evaluation starting ... ###')
+    #evaluate_model(model, test_generator)
     model_outputs = evaluate(model, test_generator)
-    save_model(model, model_outputs, batch_size, epochs)
+
+    print('### Evaluation done ! Saving params & model to MLFlow ... ###\n')
+    save_model(model, model_outputs, batch_size, epochs, model_name, l_rate, sample_size)
