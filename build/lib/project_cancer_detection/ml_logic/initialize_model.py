@@ -28,4 +28,5 @@ def init_model():
     model.compile(loss='binary_crossentropy',
                   optimizer='adam',
                   metrics=['accuracy'])
+
     return model
