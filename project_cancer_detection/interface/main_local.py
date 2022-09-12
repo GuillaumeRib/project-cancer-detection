@@ -1,6 +1,7 @@
 from webbrowser import get
 from tensorflow.keras.callbacks import EarlyStopping
 from project_cancer_detection.ml_logic.initialize_model import init_model
+from project_cancer_detection.ml_logic.initialize_model import init_model_2
 from project_cancer_detection.ml_logic.preprocessor import preprocessed
 import os
 import mlflow
@@ -30,8 +31,13 @@ def get_paths():
 
 
 def get_history(train_generator, val_generator):
+
     model = init_model()
     es = EarlyStopping(patience=patience, restore_best_weights=True,verbose=verbose)
+    #model = init_model_2()
+
+    epochs = 10
+    batch_size = 128
     history = model.fit(train_generator,
                         epochs = epochs,
                         validation_data=val_generator,
