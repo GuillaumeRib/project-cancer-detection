@@ -23,12 +23,12 @@ def get_paths():
 
 def get_history(train_generator, val_generator):
 
-    #model = init_model()
-    model = init_model_2()
+    model = init_model()
+    #model = init_model_2()
 
-    epochs = 50
+    epochs = 10
     batch_size = 128
-    es = EarlyStopping(patience=4, restore_best_weights=True,verbose=1)
+    es = EarlyStopping(patience=3, restore_best_weights=True,verbose=1)
     history = model.fit(train_generator,
                         epochs = epochs,
                         validation_data=val_generator,
