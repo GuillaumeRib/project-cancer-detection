@@ -1,7 +1,7 @@
 from webbrowser import get
 from tensorflow.keras.callbacks import EarlyStopping
-from project_cancer_detection.ml_logic.initialize_model import init_model, init_model_2, init_VGG, init_ResNet50
-from project_cancer_detection.ml_logic.preprocessor import preprocessed, preprocessed_ResNet50, preprocessed_VGG
+from project_cancer_detection.ml_logic.initialize_model import init_model, init_model_2, init_VGG, init_ResNet50, init_MobileNetV2
+from project_cancer_detection.ml_logic.preprocessor import preprocessed, preprocessed_ResNet50, preprocessed_VGG, preprocessed_MobileNetV2
 import os
 import mlflow
 
@@ -9,22 +9,30 @@ import mlflow
 # Select the model
 #model_name='Baseline_CNN'
 #model_name='V2_CNN'
-model_name='VGG16_transfer'
+#model_name='VGG16_transfer'
 #model_name='ResNet50'
+model_name='MobileNetV2'
+
+# Add a comment about the model run (ie: some layer added / removed - tweeked learning decay etc.)
+msg = 'first MobileNetV2'
 
 # Sample size
-sample_size = '_10k'
+sample_size = '_5k'
 
 # Init model params
 l_rate = 0.001
+# Decay Params
+decay_steps = 2000
+decay_rate = 0.75
+
 
 # Fit Model Parameters (from get_history function)
-epochs = 100
+epochs = 1
 batch_size = 16
 verbose_model = 1
 
 # EarlyStopping
-patience=100
+patience=10
 verbose=1
 ####################################
 
@@ -47,13 +55,15 @@ def get_paths():
 def get_history(train_generator, val_generator):
 
     if model_name == 'Baseline_CNN':
-        model = init_model(l_rate)
+        model = init_model(l_rate,decay_rate,decay_steps)
     elif model_name == 'V2_CNN':
-        model = init_model_2(l_rate)
+        model = init_model_2(l_rate,decay_rate,decay_steps)
     elif model_name == 'VGG16_transfer':
-        model = init_VGG(l_rate)
+        model = init_VGG(l_rate,decay_rate,decay_steps)
     elif model_name == 'ResNet50':
-        model = init_ResNet50(l_rate)
+        model = init_ResNet50(l_rate,decay_rate,decay_steps)
+    elif model_name == 'MobileNetV2':
+        model = init_MobileNetV2(l_rate,decay_rate,decay_steps)
 
     es = EarlyStopping(patience=patience, restore_best_weights=True,verbose=verbose)
 
@@ -71,13 +81,22 @@ def evaluate(model, test_generator):
     results = model.evaluate(test_generator, verbose = 1 )
     return results
 
-def save_model(model, model_outputs, batch_size, epochs, model_name, l_rate, sample_size, patience): # Add "sample_size"
+def save_model(model, model_outputs, batch_size, epochs, model_name, l_rate, sample_size, patience, msg,decay_steps,decay_rate): # Add "sample_size"
     mlflow.set_tracking_uri("https://mlflow.lewagon.ai")
     mlflow.set_experiment(experiment_name="project-cancer-detection")
 
     with mlflow.start_run():
 
-        params = dict(batch_size=batch_size, epochs=epochs, l_rate=l_rate, model_name=model_name, sample_size=sample_size, patience=patience) # Add "sample_size=sample_size"
+        params = dict(
+            batch_size=batch_size,
+            epochs=epochs,
+            l_rate=l_rate,
+            model_name=model_name,
+            sample_size=sample_size,
+            patience=patience,
+            msg=msg,
+            decay_steps=decay_steps,
+            decay_rate=decay_rate) # Add "sample_size=sample_size"
         metrics = dict(loss=model_outputs[0], accuracy=model_outputs[1])
 
         mlflow.log_params(params)
@@ -107,6 +126,9 @@ if __name__ == '__main__':
     if model_name == 'ResNet50':
         train_generator, val_generator, test_generator = preprocessed_ResNet50(train_path, test_path)
         print('### Preprocessing & generators done! ###\n')
+    if model_name == 'MobileNetV2':
+        train_generator, val_generator, test_generator = preprocessed_MobileNetV2(train_path, test_path)
+        print('### Preprocessing & generators done! ###\n')
     else:
         train_generator, val_generator, test_generator = preprocessed(train_path, test_path)
         print('### Preprocessing & generators done! ###\n')
@@ -120,4 +142,4 @@ if __name__ == '__main__':
     model_outputs = evaluate(model, test_generator)
 
     print('### Evaluation done ! Saving params & model to MLFlow ... ###\n')
-    save_model(model, model_outputs, batch_size, epochs, model_name, l_rate, sample_size, patience)  # ADD "sample_size"
+    save_model(model, model_outputs, batch_size, epochs, model_name, l_rate, sample_size, patience, msg,decay_steps,decay_rate)  # ADD "sample_size"
