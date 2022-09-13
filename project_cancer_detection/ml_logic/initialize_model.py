@@ -7,7 +7,7 @@ from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2
 from tensorflow.keras import optimizers
 from tensorflow.keras.optimizers import Adam
-
+from tensorflow.keras.optimizers import RMSProp
 from tensorflow.keras.optimizers.schedules import ExponentialDecay
 
 def init_model(l_rate, decay_rate, decay_steps):
@@ -177,13 +177,13 @@ def init_MobileNetV2(l_rate, decay_rate, decay_steps):
     model = load_MobileNetV2()
     model = add_last_layers(model)
 
-    lr_schedule = ExponentialDecay(l_rate,
-                            decay_steps = decay_steps,    # every 2000 iterations
-                            decay_rate = decay_rate,
-                            staircase=True)      # we multiply the learning rate by the decay_rate
-                                                   # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
+    # lr_schedule = ExponentialDecay(l_rate,
+    #                         decay_steps = decay_steps,    # every 2000 iterations
+    #                         decay_rate = decay_rate,
+    #                         staircase=True)      # we multiply the learning rate by the decay_rate
+    #                                                # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
 
-    optim = Adam(learning_rate=lr_schedule)
+    optim = RMSProp(learning_rate=l_rate)
     model.compile(loss='binary_crossentropy',
                   optimizer=optim,
                   metrics=['accuracy'])
