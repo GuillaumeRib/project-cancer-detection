@@ -161,13 +161,13 @@ def init_ResNet50(l_rate,decay_rate,decay_steps):
     model = load_ResNet50()
     model = add_last_layers(model)
 
-    lr_schedule = ExponentialDecay(l_rate,
-                            decay_steps = decay_steps,    # every 2000 iterations
-                            decay_rate = decay_rate)      # we multiply the learning rate by the decay_rate
-                                                   # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
+    # lr_schedule = ExponentialDecay(l_rate,
+    #                         decay_steps = decay_steps,    # every 2000 iterations
+    #                         decay_rate = decay_rate)      # we multiply the learning rate by the decay_rate
+    #                                                # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
 
 
-    optim = Adam(learning_rate=lr_schedule)
+    optim = Adam(learning_rate=l_rate)
     model.compile(loss='binary_crossentropy',
                   optimizer=optim,
                   metrics=['accuracy'])
@@ -183,7 +183,7 @@ def init_MobileNetV2(l_rate, decay_rate, decay_steps):
     #                         staircase=True)      # we multiply the learning rate by the decay_rate
     #                                                # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
 
-    optim = RMSprop(learning_rate=l_rate)
+    optim = Adam(learning_rate=l_rate)
     model.compile(loss='binary_crossentropy',
                   optimizer=optim,
                   metrics=['accuracy'])
