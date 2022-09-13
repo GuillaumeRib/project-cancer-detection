@@ -7,15 +7,15 @@ import mlflow
 
 ####################################
 # Select the model
-#model_name='Baseline_CNN'
+model_name='Baseline_CNN'
 #model_name='V2_CNN'
-model_name='VGG16_transfer'
+#model_name='VGG16_transfer'
 
 # Sample size
 sample_size = '_5K'
 
 # Init model params
-l_rate = 0.001
+l_rate = 0.0
 
 # Fit Model Parameters (from get_history function)
 epochs = 1
@@ -32,8 +32,8 @@ def get_paths():
     DATA_SOURCE = os.environ.get("DATA_SOURCE")
 
     if DATA_SOURCE == 'local':
-        train_path = os.environ.get('LOCAL_TRAIN_PATH')+sample_size
-        test_path = os.environ.get('LOCAL_TEST_PATH')+sample_size
+        train_path = os.environ.get('LOCAL_TRAIN_PATH')#+sample_size
+        test_path = os.environ.get('LOCAL_TEST_PATH')#+sample_size
 
     if DATA_SOURCE == 'cloud':
         train_path = os.environ.get('CLOUD_TRAIN_PATH')
@@ -68,13 +68,13 @@ def evaluate(model, test_generator):
     results = model.evaluate(test_generator, verbose = 1 )
     return results
 
-def save_model(model, model_outputs, batch_size, epochs, model_name, l_rate, sample_size):
+def save_model(model, model_outputs, batch_size, epochs, model_name, l_rate): # Add "sample_size"
     mlflow.set_tracking_uri("https://mlflow.lewagon.ai")
     mlflow.set_experiment(experiment_name="project-cancer-detection")
 
     with mlflow.start_run():
 
-        params = dict(batch_size=batch_size, epochs=epochs, l_rate=l_rate, model_name=model_name, sample_size=sample_size)
+        params = dict(batch_size=batch_size, epochs=epochs, l_rate=l_rate, model_name=model_name) # Add "sample_size=sample_size"
         metrics = dict(loss=model_outputs[0], accuracy=model_outputs[1])
 
         mlflow.log_params(params)
@@ -114,4 +114,4 @@ if __name__ == '__main__':
     model_outputs = evaluate(model, test_generator)
 
     print('### Evaluation done ! Saving params & model to MLFlow ... ###\n')
-    save_model(model, model_outputs, batch_size, epochs, model_name, l_rate, sample_size)
+    save_model(model, model_outputs, batch_size, epochs, model_name, l_rate)  # ADD "sample_size"
