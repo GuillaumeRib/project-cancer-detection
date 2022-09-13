@@ -135,6 +135,7 @@ def add_last_layers(model):
         #dropout_layer,
         flatten_layer,
         dense_layer_100,
+        pooling_layer,
         dense_layer_40,
         prediction_layer
     ])
