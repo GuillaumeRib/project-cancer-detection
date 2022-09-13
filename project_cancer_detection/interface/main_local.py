@@ -1,7 +1,7 @@
 from webbrowser import get
 from tensorflow.keras.callbacks import EarlyStopping
-from project_cancer_detection.ml_logic.initialize_model import init_model, init_model_2, init_VGG
-from project_cancer_detection.ml_logic.preprocessor import preprocessed
+from project_cancer_detection.ml_logic.initialize_model import init_model, init_model_2, init_VGG, init_ResNet50
+from project_cancer_detection.ml_logic.preprocessor import preprocessed, preprocessed_ResNet50, preprocessed_VGG
 import os
 import mlflow
 
@@ -10,15 +10,16 @@ import mlflow
 model_name='Baseline_CNN'
 #model_name='V2_CNN'
 #model_name='VGG16_transfer'
+model_name='ResNet50'
 
 # Sample size
-sample_size = '_5K'
+sample_size = '_5k'
 
 # Init model params
-l_rate = 0.0
+l_rate = 0.0005
 
 # Fit Model Parameters (from get_history function)
-epochs = 1
+epochs = 50
 batch_size = 32
 verbose_model = 1
 
@@ -51,6 +52,8 @@ def get_history(train_generator, val_generator):
         model = init_model_2(l_rate)
     elif model_name == 'VGG16_transfer':
         model = init_VGG(l_rate)
+    elif model_name == 'ResNet50':
+        model = init_ResNet50(l_rate)
 
     es = EarlyStopping(patience=patience, restore_best_weights=True,verbose=verbose)
 
@@ -99,7 +102,10 @@ if __name__ == '__main__':
 
     print('### Preprocessing & generators starting ... ###')
     if model_name == 'VGG16_transfer':
-        train_generator, val_generator, test_generator = preprocessed(train_path, test_path)
+        train_generator, val_generator, test_generator = preprocessed_VGG(train_path, test_path)
+        print('### Preprocessing & generators done! ###\n')
+    if model_name == 'ResNet50':
+        train_generator, val_generator, test_generator = preprocessed_ResNet50(train_path, test_path)
         print('### Preprocessing & generators done! ###\n')
     else:
         train_generator, val_generator, test_generator = preprocessed(train_path, test_path)
