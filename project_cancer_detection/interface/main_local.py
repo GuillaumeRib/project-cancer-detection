@@ -86,9 +86,9 @@ def save_model(model, model_outputs, batch_size, epochs, model_name, l_rate): # 
                             registered_model_name="cancer_detection_model")
 
 
-def load_model():
+def load_model(model_version=2):
     mlflow.set_tracking_uri("https://mlflow.lewagon.ai")
-    model_uri = "MLFLOW_MODEL_NAME"                            # 1) if you write "latest" intead of "2" it'll load the latest model;
+    model_uri = f"models:/cancer_detection_model/{model_version}"                            # 1) if you write "latest" intead of "2" it'll load the latest model;
     model = mlflow.keras.load_model(model_uri=model_uri)       # 2) you can change "2" to any number of the version you want to load
     return model
 
