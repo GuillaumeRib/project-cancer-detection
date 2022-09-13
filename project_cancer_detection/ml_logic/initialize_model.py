@@ -132,10 +132,9 @@ def add_last_layers(model):
     model = models.Sequential([
         base_model,
         pooling_layer,
-        #dropout_layer,
         flatten_layer,
         dense_layer_100,
-        dropout_layer,
+        #dropout_layer,
         dense_layer_40,
         prediction_layer
     ])
