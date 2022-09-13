@@ -1,29 +1,30 @@
 from webbrowser import get
 from tensorflow.keras.callbacks import EarlyStopping
-from project_cancer_detection.ml_logic.initialize_model import init_model, init_model_2, init_VGG
-from project_cancer_detection.ml_logic.preprocessor import preprocessed, preprocessed_VGG
+from project_cancer_detection.ml_logic.initialize_model import init_model, init_model_2, init_VGG, init_ResNet50
+from project_cancer_detection.ml_logic.preprocessor import preprocessed, preprocessed_ResNet50, preprocessed_VGG
 import os
 import mlflow
 
 ####################################
 # Select the model
-model_name='Baseline_CNN'
+#model_name='Baseline_CNN'
 #model_name='V2_CNN'
-#model_name='VGG16_transfer'
+model_name='VGG16_transfer'
+#model_name='ResNet50'
 
 # Sample size
-sample_size = '_5K'
+sample_size = '_10k'
 
 # Init model params
 l_rate = 0.001
 
 # Fit Model Parameters (from get_history function)
-epochs = 1
-batch_size = 32
+epochs = 100
+batch_size = 16
 verbose_model = 1
 
 # EarlyStopping
-patience=3
+patience=100
 verbose=1
 ####################################
 
@@ -51,6 +52,8 @@ def get_history(train_generator, val_generator):
         model = init_model_2(l_rate)
     elif model_name == 'VGG16_transfer':
         model = init_VGG(l_rate)
+    elif model_name == 'ResNet50':
+        model = init_ResNet50(l_rate)
 
     es = EarlyStopping(patience=patience, restore_best_weights=True,verbose=verbose)
 
@@ -86,9 +89,9 @@ def save_model(model, model_outputs, batch_size, epochs, model_name, l_rate, sam
                             registered_model_name="cancer_detection_model")
 
 
-def load_model():
+def load_model(model_version=2):
     mlflow.set_tracking_uri("https://mlflow.lewagon.ai")
-    model_uri = "MLFLOW_MODEL_NAME"                            # 1) if you write "latest" intead of "2" it'll load the latest model;
+    model_uri = f"models:/cancer_detection_model/{model_version}"                            # 1) if you write "latest" intead of "2" it'll load the latest model;
     model = mlflow.keras.load_model(model_uri=model_uri)       # 2) you can change "2" to any number of the version you want to load
     return model
 
@@ -100,6 +103,9 @@ if __name__ == '__main__':
     print('### Preprocessing & generators starting ... ###')
     if model_name == 'VGG16_transfer':
         train_generator, val_generator, test_generator = preprocessed_VGG(train_path, test_path)
+        print('### Preprocessing & generators done! ###\n')
+    if model_name == 'ResNet50':
+        train_generator, val_generator, test_generator = preprocessed_ResNet50(train_path, test_path)
         print('### Preprocessing & generators done! ###\n')
     else:
         train_generator, val_generator, test_generator = preprocessed(train_path, test_path)

@@ -2,9 +2,17 @@ from http import client
 from google.cloud import storage
 import os
 
+bucket_name = 'cancer-detection-small-datasets'
+#prefix = '0_test/'
+dl_dir = 'raw_data/'
 os.environ["GOOGLE_APPLICATION_CREDENTIALS"]="/home/naz/ethereal-runner-356713-a4caa9e26f85.json"
 client = storage.Client()
-bucket = client.get_bucket('cancer-detection-small-datasets')
-blob = storage.Blob('train_1k/0/0056b591aecd870591760b3964792c5b584e7cfa.tif', bucket)
-with open('test.tif', 'wb') as file_obj:
-    client.download_blob_to_file(blob, file_obj)
+bucket = client.get_bucket(bucket_name)
+blobs = bucket.list_blobs()
+for blob in blobs:
+    filename = blob.name
+    if not filename.endswith('/'):
+        path= os.path.split(dl_dir+filename)[0]
+        os.makedirs(path, exist_ok=True)
+        print(f"Download: {dl_dir + filename}")
+        blob.download_to_filename(dl_dir + filename)  #
