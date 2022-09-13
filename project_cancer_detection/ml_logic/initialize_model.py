@@ -33,8 +33,8 @@ def init_model(l_rate, decay_rate, decay_steps):
 
      ### Model compilation
     lr_schedule = ExponentialDecay(l_rate,
-                               decay_steps = 2000,    # every 2000 iterations
-                               decay_rate = 0.5)      # we multiply the learning rate by the decay_rate
+                               decay_steps = decay_steps,    # every 2000 iterations
+                               decay_rate = decay_rate)      # we multiply the learning rate by the decay_rate
                                                       # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
 
     optim = Adam(learning_rate=lr_schedule)
@@ -77,8 +77,8 @@ def init_model_2(l_rate,decay_rate,decay_steps):
 
      ### Model compilation
     lr_schedule = ExponentialDecay(l_rate,
-                            decay_steps = 2000,    # every 2000 iterations
-                            decay_rate = 0.5)      # we multiply the learning rate by the decay_rate
+                            decay_steps = decay_steps,    # every 2000 iterations
+                            decay_rate = decay_rate)      # we multiply the learning rate by the decay_rate
                                                    # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
 
 
@@ -141,8 +141,8 @@ def init_VGG(l_rate,decay_rate,decay_steps):
     model = add_last_layers(model)
 
     lr_schedule = ExponentialDecay(l_rate,
-                            decay_steps = 2000,    # every 2000 iterations
-                            decay_rate = 0.5)      # we multiply the learning rate by the decay_rate
+                            decay_steps = decay_steps,    # every 2000 iterations
+                            decay_rate = decay_rate)      # we multiply the learning rate by the decay_rate
                                                    # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
 
 
@@ -157,8 +157,8 @@ def init_ResNet50(l_rate,decay_rate,decay_steps):
     model = add_last_layers(model)
 
     lr_schedule = ExponentialDecay(l_rate,
-                            decay_steps = 2000,    # every 2000 iterations
-                            decay_rate = 0.5)      # we multiply the learning rate by the decay_rate
+                            decay_steps = decay_steps,    # every 2000 iterations
+                            decay_rate = decay_rate)      # we multiply the learning rate by the decay_rate
                                                    # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
 
 
@@ -173,8 +173,8 @@ def init_MobileNetV2(l_rate, decay_rate, decay_steps):
     model = add_last_layers(model)
 
     lr_schedule = ExponentialDecay(l_rate,
-                            decay_steps = 2000,    # every 2000 iterations
-                            decay_rate = 0.5)      # we multiply the learning rate by the decay_rate
+                            decay_steps = decay_steps,    # every 2000 iterations
+                            decay_rate = decay_rate)      # we multiply the learning rate by the decay_rate
                                                    # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
 
     optim = Adam(learning_rate=lr_schedule)
