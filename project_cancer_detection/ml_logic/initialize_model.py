@@ -117,7 +117,7 @@ def load_MobileNetV2():
 
 
 def set_nontrainable_layers(model):
-    model.trainable = False
+    model.trainable = True
     return model
 
 def add_last_layers(model):
@@ -135,7 +135,7 @@ def add_last_layers(model):
         pooling_layer,
         flatten_layer,
         dense_layer_100,
-        #dropout_layer,
+        dropout_layer,
         dense_layer_40,
         prediction_layer
     ])
