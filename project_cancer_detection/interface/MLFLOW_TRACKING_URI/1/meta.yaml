@@ -1,4 +1,0 @@
-artifact_location: MLFLOW_TRACKING_URI/1
-experiment_id: '1'
-lifecycle_stage: active
-name: project-cancer-detection

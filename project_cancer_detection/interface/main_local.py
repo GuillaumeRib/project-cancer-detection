@@ -15,7 +15,7 @@ model_name='Baseline_CNN'
 sample_size = '_5K'
 
 # Init model params
-l_rate = 0.0
+l_rate = 0.01
 
 # Fit Model Parameters (from get_history function)
 epochs = 1
