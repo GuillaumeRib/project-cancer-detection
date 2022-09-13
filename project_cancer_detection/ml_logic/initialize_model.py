@@ -122,16 +122,20 @@ def set_nontrainable_layers(model):
 def add_last_layers(model):
     '''Take a pre-trained model, set its parameters as non-trainable, and add additional trainable layers on top'''
     base_model = set_nontrainable_layers(model)
+    pooling_layer = layers.GlobalAveragePooling2D()
     flatten_layer = layers.Flatten()
-    dense_layer = layers.Dense(10, activation='relu')
+    dense_layer_100 = layers.Dense(100, activation='relu')
+    dense_layer_40 = layers.Dense(40, activation='relu')
     prediction_layer = layers.Dense(1, activation='sigmoid')
     dropout_layer = layers.Dropout(rate=0.20)
 
     model = models.Sequential([
         base_model,
+        pooling_layer,
         #dropout_layer,
         flatten_layer,
-        dense_layer,
+        dense_layer_100,
+        dense_layer_40,
         prediction_layer
     ])
     return model
