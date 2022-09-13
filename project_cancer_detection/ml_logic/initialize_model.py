@@ -4,11 +4,12 @@ from tensorflow.keras.layers.experimental.preprocessing import Rescaling
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.applications.resnet50 import ResNet50
+from tensorflow.keras.applications.mobilenet_v2 import MobileNetV2
 from tensorflow.keras import optimizers
 from tensorflow.keras.optimizers import Adam
 from tensorflow.keras.optimizers.schedules import ExponentialDecay
 
-def init_model(l_rate=0.001):
+def init_model(l_rate, decay_rate, decay_steps):
     model = models.Sequential()
 
     model.add(Rescaling(scale=1./255,input_shape=(96,96,3)))
@@ -33,9 +34,8 @@ def init_model(l_rate=0.001):
      ### Model compilation
     lr_schedule = ExponentialDecay(l_rate,
                                decay_steps = 2000,    # every 2000 iterations
-                               decay_rate = 0.5,      # we multiply the learning rate by the decay_rate
+                               decay_rate = 0.5)      # we multiply the learning rate by the decay_rate
                                                       # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
-)
 
     optim = Adam(learning_rate=lr_schedule)
     model.compile(loss='binary_crossentropy',
@@ -45,7 +45,7 @@ def init_model(l_rate=0.001):
     return model
 
 
-def init_model_2(l_rate=0.001):
+def init_model_2(l_rate,decay_rate,decay_steps):
 
     model = models.Sequential()
 
@@ -78,9 +78,9 @@ def init_model_2(l_rate=0.001):
      ### Model compilation
     lr_schedule = ExponentialDecay(l_rate,
                             decay_steps = 2000,    # every 2000 iterations
-                            decay_rate = 0.5,      # we multiply the learning rate by the decay_rate
+                            decay_rate = 0.5)      # we multiply the learning rate by the decay_rate
                                                    # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
-)
+
 
     optim = Adam(learning_rate=lr_schedule)
     model.compile(loss='binary_crossentropy',
@@ -105,6 +105,16 @@ def load_ResNet50():
     )
     return model
 
+def load_MobileNetV2():
+    model = MobileNetV2(
+        weights='imagenet',
+        include_top=False,
+        input_shape =(96,96,3)
+    )
+    return model
+
+
+
 def set_nontrainable_layers(model):
     model.trainable = False
     return model
@@ -119,22 +129,22 @@ def add_last_layers(model):
 
     model = models.Sequential([
         base_model,
-        dropout_layer,
+        #dropout_layer,
         flatten_layer,
         dense_layer,
         prediction_layer
     ])
     return model
 
-def init_VGG(l_rate=0.001):
+def init_VGG(l_rate,decay_rate,decay_steps):
     model = load_VGG()
     model = add_last_layers(model)
 
     lr_schedule = ExponentialDecay(l_rate,
                             decay_steps = 2000,    # every 2000 iterations
-                            decay_rate = 0.5,      # we multiply the learning rate by the decay_rate
+                            decay_rate = 0.5)      # we multiply the learning rate by the decay_rate
                                                    # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
-)
+
 
     optim = Adam(learning_rate=lr_schedule)
     model.compile(loss='binary_crossentropy',
@@ -142,12 +152,33 @@ def init_VGG(l_rate=0.001):
                   metrics=['accuracy'])
     return model
 
-def init_ResNet50(l_rate=0.001):
+def init_ResNet50(l_rate,decay_rate,decay_steps):
     model = load_ResNet50()
     model = add_last_layers(model)
 
-    optim = Adam(learning_rate=l_rate)
+    lr_schedule = ExponentialDecay(l_rate,
+                            decay_steps = 2000,    # every 2000 iterations
+                            decay_rate = 0.5)      # we multiply the learning rate by the decay_rate
+                                                   # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
+
+
+    optim = Adam(learning_rate=lr_schedule)
     model.compile(loss='binary_crossentropy',
-                  optimizer='Adam',
+                  optimizer=optim,
+                  metrics=['accuracy'])
+    return model
+
+def init_MobileNetV2(l_rate, decay_rate, decay_steps):
+    model = load_MobileNetV2()
+    model = add_last_layers(model)
+
+    lr_schedule = ExponentialDecay(l_rate,
+                            decay_steps = 2000,    # every 2000 iterations
+                            decay_rate = 0.5)      # we multiply the learning rate by the decay_rate
+                                                   # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
+
+    optim = Adam(learning_rate=lr_schedule)
+    model.compile(loss='binary_crossentropy',
+                  optimizer=optim,
                   metrics=['accuracy'])
     return model
