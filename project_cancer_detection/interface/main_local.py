@@ -17,17 +17,17 @@ model_name='MobileNetV2'
 msg = 'n/a'
 
 # Sample size
-sample_size = '_5k'
+sample_size = '_50k'
 
 # Init model params
-l_rate = 0.001
+l_rate = 0.0005
 # Decay Params
-decay_steps = 300
-decay_rate = 0.50
+decay_steps = 0
+decay_rate = 0
 
 
 # Fit Model Parameters (from get_history function)
-epochs = 3
+epochs = 70
 batch_size = 16
 verbose_model = 1
 
