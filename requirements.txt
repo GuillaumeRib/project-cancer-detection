@@ -33,3 +33,8 @@ termcolor
 
 # ML-flow
 mlflow
+
+# User Interface
+streamlit
+imagecodecs  # pip install -U scikit-image imagecodecs
+streamlit_image_compariso

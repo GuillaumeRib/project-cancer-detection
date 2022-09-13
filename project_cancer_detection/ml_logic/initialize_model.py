@@ -6,7 +6,7 @@ from tensorflow.keras.applications.vgg16 import VGG16
 from tensorflow.keras.applications.resnet50 import ResNet50
 from tensorflow.keras import optimizers
 from tensorflow.keras.optimizers import Adam
-
+from tensorflow.keras.optimizers.schedules import ExponentialDecay
 
 def init_model(l_rate=0.001):
     model = models.Sequential()
@@ -31,9 +31,15 @@ def init_model(l_rate=0.001):
     model.add(layers.Dense(1, activation='sigmoid'))
 
      ### Model compilation
-    optim = Adam(learning_rate=l_rate)
+    lr_schedule = ExponentialDecay(l_rate,
+                               decay_steps = 2000,    # every 2000 iterations
+                               decay_rate = 0.5,      # we multiply the learning rate by the decay_rate
+                                                      # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
+)
+
+    optim = Adam(learning_rate=lr_schedule)
     model.compile(loss='binary_crossentropy',
-                  optimizer='Adam',
+                  optimizer=optim,  # get's Adam with learning rate
                   metrics=['accuracy'])
 
     return model
@@ -70,9 +76,15 @@ def init_model_2(l_rate=0.001):
     model.add(layers.Dense(1, activation='sigmoid'))
 
      ### Model compilation
-    optim = Adam(learning_rate=l_rate)
+    lr_schedule = ExponentialDecay(l_rate,
+                            decay_steps = 2000,    # every 2000 iterations
+                            decay_rate = 0.5,      # we multiply the learning rate by the decay_rate
+                                                   # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
+)
+
+    optim = Adam(learning_rate=lr_schedule)
     model.compile(loss='binary_crossentropy',
-                  optimizer='Adam',
+                  optimizer=optim,
                   metrics=['accuracy'])
     return model
 
@@ -118,9 +130,15 @@ def init_VGG(l_rate=0.001):
     model = load_VGG()
     model = add_last_layers(model)
 
-    optim = Adam(learning_rate=l_rate)
+    lr_schedule = ExponentialDecay(l_rate,
+                            decay_steps = 2000,    # every 2000 iterations
+                            decay_rate = 0.5,      # we multiply the learning rate by the decay_rate
+                                                   # PS: we have appox 404 x 70% /16 = 18 iterations per epoch
+)
+
+    optim = Adam(learning_rate=lr_schedule)
     model.compile(loss='binary_crossentropy',
-                  optimizer='Adam',
+                  optimizer=optim,
                   metrics=['accuracy'])
     return model
 

@@ -22,6 +22,7 @@ def preprocessed(local_train_path, local_test_path):
                                                     class_mode='binary')
     return train_generator, val_generator, test_generator
 
+
 def preprocessed_VGG(local_train_path, local_test_path):
     from keras.applications.vgg16 import preprocess_input
     # ImageGenerator preprocess images / minimum params / to read .tif images
