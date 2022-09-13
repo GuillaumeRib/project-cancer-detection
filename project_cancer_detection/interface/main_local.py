@@ -14,7 +14,7 @@ import mlflow
 model_name='MobileNetV2'
 
 # Add a comment about the model run (ie: some layer added / removed - tweeked learning decay etc.)
-msg = 'first MobileNetV2'
+msg = 'n/a'
 
 # Sample size
 sample_size = '_5k'
@@ -22,12 +22,12 @@ sample_size = '_5k'
 # Init model params
 l_rate = 0.001
 # Decay Params
-decay_steps = 2000
-decay_rate = 0.75
+decay_steps = 300
+decay_rate = 0.50
 
 
 # Fit Model Parameters (from get_history function)
-epochs = 1
+epochs = 3
 batch_size = 16
 verbose_model = 1
 
@@ -81,22 +81,13 @@ def evaluate(model, test_generator):
     results = model.evaluate(test_generator, verbose = 1 )
     return results
 
-def save_model(model, model_outputs, batch_size, epochs, model_name, l_rate, sample_size, patience, msg,decay_steps,decay_rate): # Add "sample_size"
+def save_model(model, model_outputs, batch_size, epochs, model_name, l_rate, sample_size, patience, msg, decay_steps, decay_rate): # Add "sample_size"
     mlflow.set_tracking_uri("https://mlflow.lewagon.ai")
     mlflow.set_experiment(experiment_name="project-cancer-detection")
 
     with mlflow.start_run():
 
-        params = dict(
-            batch_size=batch_size,
-            epochs=epochs,
-            l_rate=l_rate,
-            model_name=model_name,
-            sample_size=sample_size,
-            patience=patience,
-            msg=msg,
-            decay_steps=decay_steps,
-            decay_rate=decay_rate) # Add "sample_size=sample_size"
+        params = dict(batch_size=batch_size,epochs=epochs,l_rate=l_rate,model_name=model_name,sample_size=sample_size,patience=patience,msg=msg,decay_steps=decay_steps,decay_rate=decay_rate) # Add "sample_size=sample_size"
         metrics = dict(loss=model_outputs[0], accuracy=model_outputs[1])
 
         mlflow.log_params(params)
