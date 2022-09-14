@@ -69,4 +69,4 @@ gcp_submit_training:
 
 # streamlit: heroku
 run_streamlit:
-    streamlit run app.py
+	streamlit run app.py
