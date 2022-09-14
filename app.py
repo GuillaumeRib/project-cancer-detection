@@ -1,7 +1,11 @@
+from importlib.resources import path
 import streamlit as st
+import os
 from PIL import Image
 import numpy as np
 from project_cancer_detection.interface.main_local import load_model
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+from keras.applications.mobilenet_v2 import preprocess_input
 from tempfile import NamedTemporaryFile
 
 
@@ -83,18 +87,21 @@ with col2:
 st.markdown("<h6 style='text-align: center; color: grey;'>Insert image for tumor detection</h6>", unsafe_allow_html=True)
 uploaded= st.file_uploader("", type=['tif'])
 
+
 @st.cache(allow_output_mutation=True)
 def load_model_cache():
-    model = load_model(model_version=53)
+    model = load_model(model_version=76)
     return model
 
 test_generator = 0
 c1, c2, c3= st.columns(3)
 if uploaded:
+
     with NamedTemporaryFile("wb", suffix=".tif") as f:
         print("Hello, we are inside the uploaded function")
         f.write(uploaded.getvalue())
         path_to_temp = f.name # f.name is the path of the temporary file
+        print(path_to_temp)
         im = Image.open(f.name)
         with c1:
             st.write("")
@@ -112,10 +119,15 @@ if uploaded:
                 im_np = np.expand_dims(im_np, 0)
                 #print(f'Shape of numpu.array ---> {im_np.shape}')
                 # initialize model
+                print("Hello")
                 model = load_model_cache()
+                print("Bye !")
+
+                # preprocessing with MobileNetV2
+                im_prep = preprocess_input(im_np)
 
                 # prediction on model
-                model_preds = model.predict(im_np)
+                model_preds = model.predict(im_prep)
 
                 #model_pred_classes = np.argmax(model_preds, axis=1)
                 with c3:
