@@ -17,7 +17,7 @@ model_name='MobileNetV2'
 msg = 'n/a'
 
 # Sample size
-sample_size = '_50k'
+sample_size = '_10K'
 
 # Init model params
 l_rate = 0.0005
