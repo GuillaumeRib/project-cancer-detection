@@ -71,7 +71,7 @@ def preprocessed_ResNet50(local_train_path, local_test_path):
 def preprocessed_MobileNetV2(local_train_path, local_test_path):
     from keras.applications.mobilenet_v2 import preprocess_input
     # ImageGenerator preprocess images / minimum params / to read .tif images
-    train_datagen = ImageDataGenerator(validation_split=0.2,preprocessing_function=preprocess_input,horizontal_flip=True,vertical_flip=True)
+    train_datagen = ImageDataGenerator(validation_split=0.2,preprocessing_function=preprocess_input,horizontal_flip=True)
     test_datagen = ImageDataGenerator(preprocessing_function=preprocess_input)
 
     # Load from directory to flow passsed into ImageGenerator
