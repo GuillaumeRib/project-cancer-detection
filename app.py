@@ -4,7 +4,6 @@ import os
 from PIL import Image
 import numpy as np
 from project_cancer_detection.interface.main_local import load_model
-from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from keras.applications.mobilenet_v2 import preprocess_input
 from tempfile import NamedTemporaryFile
 
@@ -15,21 +14,21 @@ path_to_test = '/home/naz/code/GuillaumeRib/project-cancer-detection/raw_data/te
 # the page icon
 st.set_page_config("Deep Learning for Cancer Diagnosis", "🔬")
 
-# bg_img = '''
-#     <style>
-#     section.css-k1vhr4.egzxvld3 {
-#     background-image: url("https://i.imgur.com/3BOSVg9.png");
-#     background-size: cover;
-#     }
-#     </style>
-#     '''
+bg_img = '''
+    <style>
+    section.css-k1vhr4.egzxvld3 {
+    background-image: url("https://i.imgur.com/3BOSVg9.png");
+    background-size: cover;
+    }
+    </style>
+    '''
 
-# # cool image link: https://i.imgur.com/3BOSVg9.png
+# cool image link: https://i.imgur.com/3BOSVg9.png
 
-# # the whole page: css-18ni7ap e8zbici2
-# # upper part is white: css-1wrcr25.egzxvld4
+# the whole page: css-18ni7ap e8zbici2
+# upper part is white: css-1wrcr25.egzxvld4
 
-# st.markdown(bg_img, unsafe_allow_html=True)
+st.markdown(bg_img, unsafe_allow_html=True)
 
 
 header_bg_img = '''
@@ -90,7 +89,7 @@ uploaded= st.file_uploader("", type=['tif'])
 
 @st.cache(allow_output_mutation=True)
 def load_model_cache():
-    model = load_model(model_version=76)
+    model = load_model(model_version=84)
     return model
 
 test_generator = 0
@@ -138,4 +137,5 @@ if uploaded:
                     st.write("")
                     st.markdown("<h5 style=color: grey;'>Model prediction</5>", unsafe_allow_html=True)
                 model_preds = model_preds.tolist()
-                c3.write("🧪 " + str(round(model_preds[0][0], 2)) + "%" + " of tumor detection")
+                print(model_preds)
+                c3.write("🧪 " + str(round(model_preds[0][0], 5)) + "%" + " of tumor detection")
