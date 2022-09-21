@@ -9,9 +9,6 @@
 - Type of analysis: Image recognition / Binary classification
 
 
-Models - Built and trained several Deep Learning Convolutional Neural Network (CNN) models including transfer learning (ie: VGG16, ResNet, MobileNetV2) and using MLFlow
-Front-End - Streamlit web-page browsing images for model prediction results.
-
 # Startup the project
 
 The initial setup.
