@@ -1,10 +1,16 @@
 # Data analysis
 - Document here the project: project-cancer-detection
-- Description: Project Description
-- Data Source:
-- Type of analysis:
+- Description:
+    * Objective - Predict presence of metastatic tissue on lymph node scan images
+    * Data - Separated images between Train , Validation and Test splits together with creation of random samples (can be found here: gs://cancer-detection-small-datasets)
+    * Models - Built and trained several Deep Learning Convolutional Neural Network (CNN) models including transfer learning (ie: VGG16, ResNet,        MobileNetV2) and using MLFlow
+    * Front-End - Streamlit web-page browsing images for model prediction results.
+- Data Source: Kaggle dataset sourced from former competition: https://www.kaggle.com/competitions/histopathologic-cancer-detection
+- Type of analysis: Image recognition / Binary classification
 
-Please document the project the better you can.
+
+Models - Built and trained several Deep Learning Convolutional Neural Network (CNN) models including transfer learning (ie: VGG16, ResNet, MobileNetV2) and using MLFlow
+Front-End - Streamlit web-page browsing images for model prediction results.
 
 # Startup the project
 
