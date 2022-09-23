@@ -138,4 +138,4 @@ if uploaded:
                     st.markdown("<h5 style=color: grey;'>Model prediction</5>", unsafe_allow_html=True)
                 model_preds = model_preds.tolist()
                 print(model_preds)
-                c3.write("🧪 " + str(round(model_preds[0][0], 5)) + "%" + " of tumor detection")
+                c3.write("🧪 " + str(round(model_preds[0][0], 5)*100) + "%" + " probability of containing metastatic tissue")

@@ -2,6 +2,7 @@ from webbrowser import get
 from tensorflow.keras.callbacks import EarlyStopping
 from project_cancer_detection.ml_logic.initialize_model import init_model, init_model_2, init_VGG, init_ResNet50, init_MobileNetV2
 from project_cancer_detection.ml_logic.preprocessor import preprocessed, preprocessed_ResNet50, preprocessed_VGG, preprocessed_MobileNetV2
+import pandas as pd
 import os
 import mlflow
 
@@ -27,7 +28,7 @@ decay_rate = 0
 
 
 # Fit Model Parameters (from get_history function)
-epochs = 70
+epochs = 5
 batch_size = 16
 verbose_model = 1
 
@@ -81,6 +82,15 @@ def evaluate(model, test_generator):
     results = model.evaluate(test_generator, verbose = 1 )
     return results
 
+
+def predict(model,test_generator):
+    print('### Predictions starting ... ###\n')
+    predictions = model.predict(test_generator)
+    data = pd.DataFrame(predictions)
+    data.to_csv('predictions.csv')
+    return data.head()
+
+
 def save_model(model, model_outputs, batch_size, epochs, model_name, l_rate, sample_size, patience, msg, decay_steps, decay_rate): # Add "sample_size"
     mlflow.set_tracking_uri("https://mlflow.lewagon.ai")
     mlflow.set_experiment(experiment_name="project-cancer-detection")
@@ -99,7 +109,7 @@ def save_model(model, model_outputs, batch_size, epochs, model_name, l_rate, sam
                             registered_model_name="cancer_detection_model")
 
 
-def load_model(model_version=76):
+def load_model(model_version=84):
     mlflow.set_tracking_uri("https://mlflow.lewagon.ai")
     model_uri = f"models:/cancer_detection_model/{model_version}"                            # 1) if you write "latest" intead of "2" it'll load the latest model;
     model = mlflow.keras.load_model(model_uri=model_uri)       # 2) you can change "2" to any number of the version you want to load

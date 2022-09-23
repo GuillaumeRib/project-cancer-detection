@@ -65,8 +65,6 @@ gcp_submit_training:
 		--region ${REGION} \
 		--stream-logs
 
-#--job-dir gs://${BUCKET_NAME}/${BUCKET_TRAINING_FOLDER}
 
-# streamlit: heroku
 run_streamlit:
 	streamlit run app.py
