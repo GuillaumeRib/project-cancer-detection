@@ -86,6 +86,9 @@ with col2:
 st.markdown("<h6 style='text-align: center; color: grey;'>Insert image for metastatic tissue prediction</h6>", unsafe_allow_html=True)
 uploaded= st.file_uploader("", type=['tif'])
 
+# link to sample files from googledrive - 0 and 1
+drive = '[Download sample scan images for testing](https://drive.google.com/drive/folders/1S7Tbb1WZ6xciym6exqT37zbY9aZ1KXXV)'
+st.markdown(drive, unsafe_allow_html=True)
 
 @st.cache(allow_output_mutation=True)
 def load_model_cache():
