@@ -83,7 +83,7 @@ with col2:
     st.header('Deep Learning for Cancer Diagnosis')
 
 # upload image
-st.markdown("<h6 style='text-align: center; color: grey;'>Insert image for tumor detection</h6>", unsafe_allow_html=True)
+st.markdown("<h6 style='text-align: center; color: grey;'>Insert image for metastatic tissue prediction</h6>", unsafe_allow_html=True)
 uploaded= st.file_uploader("", type=['tif'])
 
 
@@ -116,7 +116,7 @@ if uploaded:
             if st.button("Predict on Model"):
                 im_np = np.array(im)
                 im_np = np.expand_dims(im_np, 0)
-                #print(f'Shape of numpu.array ---> {im_np.shape}')
+
                 # initialize model
                 print("Hello")
                 model = load_model_cache()
@@ -128,7 +128,6 @@ if uploaded:
                 # prediction on model
                 model_preds = model.predict(im_prep)
 
-                #model_pred_classes = np.argmax(model_preds, axis=1)
                 with c3:
                     st.write("")
                     st.write("")
@@ -138,4 +137,4 @@ if uploaded:
                     st.markdown("<h5 style=color: grey;'>Model prediction</5>", unsafe_allow_html=True)
                 model_preds = model_preds.tolist()
                 print(model_preds)
-                c3.write("🧪 " + str(round(model_preds[0][0], 5)*100) + "%" + " probability of containing metastatic tissue")
+                c3.write("🧪 " + str(round(model_preds[0][0], 4)*100) + "%" + " probability of containing metastatic tissue")
