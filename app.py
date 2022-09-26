@@ -9,8 +9,6 @@ from tempfile import NamedTemporaryFile
 
 
 
-path_to_test = '/home/naz/code/GuillaumeRib/project-cancer-detection/raw_data/test_small'
-
 # the page icon
 st.set_page_config("Deep Learning for Cancer Diagnosis", "🔬")
 
@@ -51,6 +49,7 @@ middle_bg_img = '''
     div.block-container.css-12oz5g7.egzxvld2 {
     background-color: white;
     background-size: cover;
+    color: dark-grey;
     }
     </style>
     '''
@@ -74,13 +73,12 @@ button_bg_img = '''
 st.markdown(button_bg_img, unsafe_allow_html=True)
 
 
-
 # header
 col1, mid, col2 = st.columns([1,1,20])
 with col1:
     st.image('https://images.emojiterra.com/twitter/v14.0/512px/1f9ec.png', width=60)
 with col2:
-    st.header('Deep Learning for Cancer Diagnosis')
+    st.markdown("<h2 style='text-align: center; color: #131032;'>Deep Learning for Cancer Diagnosis</h2>", unsafe_allow_html=True)
 
 # upload image
 st.markdown("<h6 style='text-align: center; color: grey;'>Insert image for metastatic tissue prediction</h6>", unsafe_allow_html=True)
@@ -111,7 +109,7 @@ if uploaded:
             st.write("")
             st.write("")
             st.write("")
-            st.markdown("<h5 style=color: grey;'>Image input</5>", unsafe_allow_html=True)
+            st.markdown("<h5 style='color: #131032;'>Image input</5>", unsafe_allow_html=True)
         c1.image(im, width=200)
         #c1.subheader('Image was loaded for model prediction')
         st.write("")
@@ -137,7 +135,7 @@ if uploaded:
                     st.write("")
                     st.write("")
                     st.write("")
-                    st.markdown("<h5 style=color: grey;'>Model prediction</5>", unsafe_allow_html=True)
+                    st.markdown("<h5 style='color: #131032;'>Model prediction</5>", unsafe_allow_html=True)
                 model_preds = model_preds.tolist()
                 print(model_preds)
                 c3.write("🧪 " + str(round(model_preds[0][0], 4)*100) + "%" + " probability of containing metastatic tissue")
